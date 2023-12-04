@@ -8,19 +8,31 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fooddelivery.R
 import com.fooddelivery.entities.Restaurant
 
-class RestaurantAdapter : RecyclerView.Adapter<RestaurantAdapter.RestaurantViewHolder>() {
+class RestaurantAdapter(private var restaurantList: MutableList<Restaurant>) :
+    RecyclerView.Adapter<RestaurantAdapter.RestaurantViewHolder>() {
 
-    private var restaurantList = ArrayList<Restaurant>()
+    interface OnItemClickListener {
+        fun onItemClick(restaurant: Restaurant)
+    }
 
-    fun setData(restaurants: List<Restaurant>) {
-        restaurantList.clear()
-        restaurantList.addAll(restaurants)
-        notifyDataSetChanged()
+    private var listener: OnItemClickListener? = null
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.listener = listener
     }
 
     inner class RestaurantViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val imageView: ImageView = itemView.findViewById(R.id.img_restaurant)
         private val nameTextView: TextView = itemView.findViewById(R.id.restaurant_name)
+
+        init {
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    listener?.onItemClick(restaurantList[position])
+                }
+            }
+        }
 
         fun bind(restaurant: Restaurant) {
             imageView.setImageResource(restaurant.imageResId)
@@ -34,12 +46,17 @@ class RestaurantAdapter : RecyclerView.Adapter<RestaurantAdapter.RestaurantViewH
         return RestaurantViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: RestaurantViewHolder, position: Int) {
-        val restaurant = restaurantList[position]
-        holder.bind(restaurant)
-    }
-
     override fun getItemCount(): Int {
         return restaurantList.size
+    }
+
+    override fun onBindViewHolder(holder: RestaurantViewHolder, position: Int) {
+        holder.bind(restaurantList[position])
+    }
+
+    fun setData(restaurants: List<Restaurant>) {
+        restaurantList.clear()
+        restaurantList.addAll(restaurants)
+        notifyDataSetChanged()
     }
 }
