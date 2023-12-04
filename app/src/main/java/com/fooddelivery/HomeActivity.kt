@@ -17,6 +17,7 @@ class HomeActivity : AppCompatActivity(), RestaurantAdapter.OnItemClickListener 
     private lateinit var restaurantAdapter: RestaurantAdapter
     private lateinit var searchView: SearchView
     private lateinit var restaurantList: List<Restaurant>
+    private var lastSelectedPosition: Int = RecyclerView.NO_POSITION
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +46,19 @@ class HomeActivity : AppCompatActivity(), RestaurantAdapter.OnItemClickListener 
             }
         })
 
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt("lastSelectedPosition", lastSelectedPosition)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        lastSelectedPosition = savedInstanceState.getInt("lastSelectedPosition", RecyclerView.NO_POSITION)
+        if (lastSelectedPosition != RecyclerView.NO_POSITION) {
+            restaurantAdapter.setSelectedPosition(lastSelectedPosition)
+        }
     }
 
     private fun setupRecyclerView(restaurants: List<Restaurant>) {

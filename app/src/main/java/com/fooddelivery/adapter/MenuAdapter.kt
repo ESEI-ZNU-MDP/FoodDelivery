@@ -39,9 +39,4 @@ class MenuAdapter(private val menuList: List<MenuItem>) :
         holder.bind(menuList[position])
     }
 
-//    fun setData(restaurants: List<Restaurant>) {
-//        menuList.clear()
-//        menuList.addAll(menuList)
-//        notifyDataSetChanged()
-//    }
 }

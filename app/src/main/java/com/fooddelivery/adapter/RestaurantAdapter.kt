@@ -17,6 +17,13 @@ class RestaurantAdapter(private var restaurantList: MutableList<Restaurant>) :
 
     private var listener: OnItemClickListener? = null
 
+    private var selectedPosition: Int = RecyclerView.NO_POSITION
+
+    fun setSelectedPosition(position: Int) {
+        selectedPosition = position
+        notifyDataSetChanged()
+    }
+
     fun setOnItemClickListener(listener: OnItemClickListener) {
         this.listener = listener
     }
